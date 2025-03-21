@@ -11,7 +11,7 @@ const createBooking = async (req, res) => {
 
         const roomName = `Interview_${Date.now()}`;
 
-        const newBooking = await Booking.create({ userId, peerId, dateTime: utcDate, roomName });
+        const newBooking = await bookingSchema.create({ userId, peerId, dateTime: utcDate, roomName });
 
         res.status(201).json({ message: "Booking confirmed", booking: newBooking });
     } catch (error) {
