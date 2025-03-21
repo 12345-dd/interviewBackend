@@ -2,21 +2,23 @@ const bookingSchema = require("../models/bookingModel");
 
 const createBooking = async (req, res) => {
     try {
-        const { userId, peerId, dateTime } = req.body;
+        let { userId, peerId, dateTime } = req.body;
 
-        if (!userId || !peerId || !dateTime) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
+        console.log("Received Date & Time (Backend, Raw):", dateTime);
+
+        const utcDate = new Date(dateTime);
+        console.log("Storing in MongoDB (UTC Time):", utcDate.toISOString());
 
         const roomName = `Interview_${Date.now()}`;
 
-        const newBooking = await bookingSchema.create({ userId, peerId, dateTime, roomName });
+        const newBooking = await Booking.create({ userId, peerId, dateTime: utcDate, roomName });
 
         res.status(201).json({ message: "Booking confirmed", booking: newBooking });
     } catch (error) {
         res.status(500).json({ message: "Error creating booking", error: error.message });
     }
 };
+
 
 const getUserBookings = async (req, res) => {
     try {
